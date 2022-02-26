@@ -30,6 +30,11 @@ const reducer = (state = initialState, action) => {
       const newState = [...state.filter( a => a.id !== id), updatedAnecdote]
       return newState;
     }
+
+    case 'ADD_ANECDOTE':{
+      console.log('adding anecdote in reducer:', action.data)
+      return [...state, asObject(action.data)];
+    }
     default: 
       return state;
 
@@ -44,5 +49,12 @@ export const addVote = (id) => {
   return {
     type: 'ADD_VOTE',
     data: id
+  }
+}
+
+export const addAnecdote = (content) => {
+  return {
+    type: 'ADD_ANECDOTE',
+    data: content
   }
 }
