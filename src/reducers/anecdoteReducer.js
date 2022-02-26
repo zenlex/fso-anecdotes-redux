@@ -32,9 +32,9 @@ const reducer = (state = initialState, action) => {
     }
 
     case 'ADD_ANECDOTE':{
-      console.log('adding anecdote in reducer:', action.data)
       return [...state, asObject(action.data)];
     }
+
     default: 
       return state;
 
