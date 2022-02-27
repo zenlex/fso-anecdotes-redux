@@ -12,7 +12,7 @@ const dispatch = useDispatch()
 
   const filter = useSelector(state => state.filter)
   let anecdotes = useSelector(state => state.anecdotes.slice())
-    .filter(a => a.content.includes(filter))
+    .filter(a => a.content?.includes(filter))
     .sort((a, b)=> b.votes - a.votes)
 
     return (
