@@ -10,9 +10,11 @@ const dispatch = useDispatch()
     setTimeout(() => dispatch(clearNotification()), 3000)
   }
 
-  const anecdotes = useSelector(state => state.anecdotes.slice())
-  anecdotes.sort((a, b)=> b.votes - a.votes)
-    
+  const filter = useSelector(state => state.filter)
+  let anecdotes = useSelector(state => state.anecdotes.slice())
+    .filter(a => a.content.includes(filter))
+    .sort((a, b)=> b.votes - a.votes)
+
     return (
       <>
       {anecdotes.map(anecdote =>
