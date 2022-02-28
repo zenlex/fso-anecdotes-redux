@@ -1,18 +1,24 @@
-import { useDispatch, useSelector } from "react-redux"
+import { connect } from 'react-redux'
 import { setFilter } from "../reducers/filterReducer"
 
-const Filter = () => {
-  const dispatch = useDispatch()
-  const filter = useSelector(state=>state.filter)
-  const handleChange = ({target}) => {
-    dispatch(setFilter(target.value))
-  }
-
+const Filter = ({setFilter}) => {
   return(
     <div>
-      filter: <input name="filter" value={filter} onChange={handleChange} />
+      filter: <input 
+        name="filter" 
+        onChange={({target}) => setFilter(target.value)} 
+        />
     </div>
   )
 }
 
-export default Filter
+const mapStateToProps = (state) => {
+  return {
+    filter: state.filter
+  }
+}
+const mapDispatchToProps = {
+    setFilter,
+  }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Filter)
