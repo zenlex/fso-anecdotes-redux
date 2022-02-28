@@ -17,16 +17,13 @@ const anecdoteSlice = createSlice({
       return [...state, anecdote]
     },
 
-    addVote(state, action){
-      const id = action.payload
-      const anecdote = state.find(a => a.id === id )
-      const updatedAnecdote = {...anecdote, votes: anecdote.votes + 1}
-      return state.map( a => a.id !== id ? a : updatedAnecdote)
+    updateAnecdote(state, action){
+      return state.map( a => a.id !== action.payload.id ? a : action.payload)
     }
   }
 })
 
-export const { addVote, appendAnecdote, setAnecdotes } = anecdoteSlice.actions
+export const { updateAnecdote, appendAnecdote, setAnecdotes } = anecdoteSlice.actions
 
 export const addAnecdote = (content) => {
   return async dispatch => {
@@ -41,6 +38,16 @@ export const initializeAnecdotes = () => {
   return async dispatch => {
       const anecdotes = await anecdoteService.getAll()
       dispatch(setAnecdotes(anecdotes))
+  }
+}
+
+export const addVote = (anecdote) => {
+  return async dispatch => {
+    const updated = {...anecdote, votes: anecdote.votes + 1}
+    const returnedAnecdote = await anecdoteService.update(updated)
+    dispatch(updateAnecdote(returnedAnecdote))
+    dispatch(setNotificationMsg({message: `you voted for ${returnedAnecdote.content}`}))
+    setTimeout(() => dispatch(clearNotification()), 3000)
   }
 }
 
