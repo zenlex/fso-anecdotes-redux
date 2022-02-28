@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import anecdoteService from '../services/anecdotes'
+import { setNotificationMsg, clearNotification } from "./notificationReducer";
 
 const initialState = [];
 
@@ -11,7 +12,7 @@ const anecdoteSlice = createSlice({
       return action.payload
     },
 
-    addAnecdote(state, action){
+    appendAnecdote(state, action){
       const anecdote = action.payload
       return [...state, anecdote]
     },
@@ -23,12 +24,20 @@ const anecdoteSlice = createSlice({
       return state.map( a => a.id !== id ? a : updatedAnecdote)
     }
   }
-
 })
 
-export const { addVote, addAnecdote, setAnecdotes } = anecdoteSlice.actions
+export const { addVote, appendAnecdote, setAnecdotes } = anecdoteSlice.actions
 
-export const initializeAnecdotes = () =>{
+export const addAnecdote = (content) => {
+  return async dispatch => {
+    const newAnecdote = await anecdoteService.create(content)
+    dispatch(appendAnecdote(newAnecdote))
+        dispatch(setNotificationMsg({message: `${content} added successfully`}))
+        setTimeout(() => dispatch(clearNotification()), 3000)
+  }
+}
+
+export const initializeAnecdotes = () => {
   return async dispatch => {
       const anecdotes = await anecdoteService.getAll()
       dispatch(setAnecdotes(anecdotes))
